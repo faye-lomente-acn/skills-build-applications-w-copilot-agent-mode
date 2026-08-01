@@ -1,4 +1,6 @@
+import { useEffect, useState } from 'react'
 import { BrowserRouter, NavLink, Route, Routes } from 'react-router-dom'
+import { fetchJson, getApiBaseUrl } from './config/api'
 import './App.css'
 
 const featureCards = [
@@ -55,6 +57,29 @@ function Shell({ children }) {
 }
 
 function OverviewPage() {
+  const [usersCount, setUsersCount] = useState(null)
+  const [activitiesCount, setActivitiesCount] = useState(null)
+  const [apiError, setApiError] = useState('')
+
+  useEffect(() => {
+    async function loadApiSnapshot() {
+      try {
+        const [usersResponse, activitiesResponse] = await Promise.all([
+          fetchJson('/api/users/'),
+          fetchJson('/api/activities/'),
+        ])
+
+        setUsersCount(usersResponse.count)
+        setActivitiesCount(activitiesResponse.count)
+        setApiError('')
+      } catch (error) {
+        setApiError(error instanceof Error ? error.message : 'Failed to load API data')
+      }
+    }
+
+    loadApiSnapshot()
+  }, [])
+
   return (
     <>
       <section className="hero-panel rounded-4 p-4 p-lg-5 mb-4 text-white overflow-hidden">
@@ -78,12 +103,28 @@ function OverviewPage() {
               <p className="text-secondary mb-2">Service endpoints</p>
               <ul className="list-unstyled mb-0 small">
                 <li className="py-2 border-bottom">Frontend: http://localhost:5173</li>
-                <li className="py-2 border-bottom">Backend API: http://localhost:8000/api</li>
+                <li className="py-2 border-bottom">Backend API: {getApiBaseUrl()}/api</li>
                 <li className="py-2">MongoDB: mongodb://localhost:27017/octofit_db</li>
               </ul>
             </div>
           </div>
         </div>
+      </section>
+
+      <section className="api-snapshot rounded-4 p-4 mb-4 bg-white border shadow-sm">
+        <p className="eyebrow mb-2">Live API snapshot</p>
+        {apiError ? (
+          <p className="text-danger mb-0">Unable to fetch API data: {apiError}</p>
+        ) : (
+          <div className="d-flex flex-wrap gap-3">
+            <span className="badge text-bg-secondary px-3 py-2">
+              Users: {usersCount ?? 'Loading...'}
+            </span>
+            <span className="badge text-bg-secondary px-3 py-2">
+              Activities: {activitiesCount ?? 'Loading...'}
+            </span>
+          </div>
+        )}
       </section>
 
       <section className="row g-4">
