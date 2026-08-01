@@ -1,7 +1,7 @@
 import cors from 'cors';
 import dotenv from 'dotenv';
 import express from 'express';
-import { getApiBaseUrl } from './config/api.js';
+import { getApiBaseUrl, getApiPort } from './config/api.js';
 import { connectDatabase } from './config/database.js';
 import activitiesRouter from './routes/activities.js';
 import leaderboardRouter from './routes/leaderboard.js';
@@ -12,9 +12,9 @@ import workoutsRouter from './routes/workouts.js';
 dotenv.config();
 
 const app = express();
-const port = 8000;
+const port = getApiPort();
 
-const apiBaseUrl = getApiBaseUrl();
+const apiBaseUrl = getApiBaseUrl(port);
 
 app.use(cors());
 app.use(express.json());
