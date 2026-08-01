@@ -1,3 +1,4 @@
+import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import Activity from '../models/Activity.js';
 import Leaderboard from '../models/Leaderboard.js';
@@ -5,6 +6,8 @@ import Team from '../models/Team.js';
 import User from '../models/User.js';
 import Workout from '../models/Workout.js';
 import { connectDatabase } from '../config/database.js';
+
+dotenv.config();
 
 /**
  * Seed the octofit_db database with test data
