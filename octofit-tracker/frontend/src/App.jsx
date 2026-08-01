@@ -1,6 +1,10 @@
-import { useEffect, useState } from 'react'
-import { BrowserRouter, NavLink, Route, Routes } from 'react-router-dom'
-import { fetchJson, getApiBaseUrl } from './config/api'
+import { NavLink, Route, Routes } from 'react-router-dom'
+import Activities from './components/Activities'
+import Leaderboard from './components/Leaderboard'
+import Teams from './components/Teams'
+import Users from './components/Users'
+import Workouts from './components/Workouts'
+import { getApiBaseUrl } from './config/api'
 import './App.css'
 
 const featureCards = [
@@ -20,9 +24,11 @@ const featureCards = [
 
 const navItems = [
   { to: '/', label: 'Overview' },
+  { to: '/users', label: 'Users' },
   { to: '/activities', label: 'Activities' },
   { to: '/teams', label: 'Teams' },
   { to: '/leaderboard', label: 'Leaderboard' },
+  { to: '/workouts', label: 'Workouts' },
 ]
 
 function Shell({ children }) {
@@ -57,29 +63,6 @@ function Shell({ children }) {
 }
 
 function OverviewPage() {
-  const [usersCount, setUsersCount] = useState(null)
-  const [activitiesCount, setActivitiesCount] = useState(null)
-  const [apiError, setApiError] = useState('')
-
-  useEffect(() => {
-    async function loadApiSnapshot() {
-      try {
-        const [usersResponse, activitiesResponse] = await Promise.all([
-          fetchJson('/api/users/'),
-          fetchJson('/api/activities/'),
-        ])
-
-        setUsersCount(usersResponse.count)
-        setActivitiesCount(activitiesResponse.count)
-        setApiError('')
-      } catch (error) {
-        setApiError(error instanceof Error ? error.message : 'Failed to load API data')
-      }
-    }
-
-    loadApiSnapshot()
-  }, [])
-
   return (
     <>
       <section className="hero-panel rounded-4 p-4 p-lg-5 mb-4 text-white overflow-hidden">
@@ -112,19 +95,15 @@ function OverviewPage() {
       </section>
 
       <section className="api-snapshot rounded-4 p-4 mb-4 bg-white border shadow-sm">
-        <p className="eyebrow mb-2">Live API snapshot</p>
-        {apiError ? (
-          <p className="text-danger mb-0">Unable to fetch API data: {apiError}</p>
-        ) : (
-          <div className="d-flex flex-wrap gap-3">
-            <span className="badge text-bg-secondary px-3 py-2">
-              Users: {usersCount ?? 'Loading...'}
-            </span>
-            <span className="badge text-bg-secondary px-3 py-2">
-              Activities: {activitiesCount ?? 'Loading...'}
-            </span>
-          </div>
-        )}
+        <p className="eyebrow mb-2">API host strategy</p>
+        <p className="text-secondary mb-2">
+          The presentation tier reads API host from Vite env var <strong>VITE_CODESPACE_NAME</strong>.
+        </p>
+        <p className="mb-1 small text-secondary">Primary URL pattern:</p>
+        <code>{`https://${import.meta.env.VITE_CODESPACE_NAME || 'YOUR_CODESPACE_NAME'}-8000.app.github.dev/api/[component]/`}</code>
+        <p className="mb-0 mt-3 small text-secondary">
+          Active base URL: <strong>{getApiBaseUrl()}</strong>
+        </p>
       </section>
 
       <section className="row g-4">
@@ -141,52 +120,18 @@ function OverviewPage() {
   )
 }
 
-function SectionPage({ title, description }) {
-  return (
-    <section className="bg-white rounded-4 shadow-sm border p-4 p-lg-5">
-      <p className="eyebrow mb-2">Application module</p>
-      <h2 className="h3 mb-3">{title}</h2>
-      <p className="text-secondary mb-0">{description}</p>
-    </section>
-  )
-}
-
 function App() {
   return (
-    <BrowserRouter>
-      <Shell>
-        <Routes>
-          <Route path="/" element={<OverviewPage />} />
-          <Route
-            path="/activities"
-            element={
-              <SectionPage
-                title="Activities"
-                description="The activity logging surface is scaffolded and ready for API-backed workout entries."
-              />
-            }
-          />
-          <Route
-            path="/teams"
-            element={
-              <SectionPage
-                title="Teams"
-                description="The team management section is ready for membership, challenges, and role-based workflows."
-              />
-            }
-          />
-          <Route
-            path="/leaderboard"
-            element={
-              <SectionPage
-                title="Leaderboard"
-                description="The competitive leaderboard view is ready for rankings and progress metrics from the backend."
-              />
-            }
-          />
-        </Routes>
-      </Shell>
-    </BrowserRouter>
+    <Shell>
+      <Routes>
+        <Route path="/" element={<OverviewPage />} />
+        <Route path="/users" element={<Users />} />
+        <Route path="/activities" element={<Activities />} />
+        <Route path="/teams" element={<Teams />} />
+        <Route path="/leaderboard" element={<Leaderboard />} />
+        <Route path="/workouts" element={<Workouts />} />
+      </Routes>
+    </Shell>
   )
 }
 

@@ -9,7 +9,7 @@ router.get('/', async (_request, response) => {
 
   response.json({
     resource: 'leaderboard',
-    endpoint: `${getApiBaseUrl()}/api/leaderboard`,
+    endpoint: `${getApiBaseUrl()}/api/leaderboard/`,
     count: leaderboard.length,
     data: leaderboard,
   });
