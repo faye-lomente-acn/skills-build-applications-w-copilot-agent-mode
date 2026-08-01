@@ -1,0 +1,35 @@
+.app-shell {
+  color: #1f2937;
+}
+
+.eyebrow {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #0d6efd;
+}
+
+.hero-panel {
+  background:
+    radial-gradient(circle at top right, rgba(255, 255, 255, 0.22), transparent 30%),
+    linear-gradient(135deg, #0f766e, #1d4ed8 55%, #0f172a);
+}
+
+.status-card,
+.feature-card {
+  backdrop-filter: blur(10px);
+}
+
+.nav-pills .nav-link.active {
+  background-color: #0f766e;
+}
+
+.api-snapshot code {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  background: #f8fafc;
+  border: 1px solid #dbe3f0;
+  border-radius: 0.5rem;
+  color: #1f2937;
+}
