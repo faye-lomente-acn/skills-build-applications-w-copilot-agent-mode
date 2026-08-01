@@ -42,5 +42,3 @@ export async function startServer() {
     console.log(`OctoFit backend listening on ${apiBaseUrl}`);
   });
 }
-
-startServer();
