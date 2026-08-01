@@ -63,7 +63,7 @@ function Leaderboard() {
                 .slice()
                 .sort((a, b) => (a.rank ?? 999) - (b.rank ?? 999))
                 .map((standing, index) => (
-                  <tr key={`${standing.teamName}-${index}`}>
+                  <tr key={String(standing.team ?? standing.teamName)}>
                     <td>{standing.rank ?? '-'}</td>
                     <td>{standing.teamName || '-'}</td>
                     <td>{standing.score ?? '-'}</td>
